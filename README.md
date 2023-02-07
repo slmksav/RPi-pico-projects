@@ -2,6 +2,9 @@
 Projects for the Pico-series microcontrollers using MicroPython and C/C++ SDK
 
 # Reaction Game
+
+Made with the Pico and MicroPython using: LCD1602, 1 LED, 1 330Ω resistor, two capped tacticle buttons.
+
 ![image](https://user-images.githubusercontent.com/87731856/217179677-cc887c50-ea92-4b42-9f22-196381f6eaad.png)
 
 *prints on the bootshell*
