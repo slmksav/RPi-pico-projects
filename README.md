@@ -18,5 +18,5 @@ Made with the Pico and MicroPython using: LCD1602, 1 LED, 1 330Ω resistor, two 
 *and calculation of average reaction times*
 ![image](https://user-images.githubusercontent.com/87731856/217180328-de646231-6430-4a98-bc42-a7ed0c53aaf9.png)
 *victory screen on the LCD and score*
-![image](https://user-images.githubusercontent.com/87731856/217892530-78255379-8f65-408c-b2b5-11bc56ad9c34.png)
+![image](https://user-images.githubusercontent.com/87731856/217892848-54b29128-df4f-4f6e-a17f-9890d0e4363f.png)
 *lastly, it will begin a new game after showing the average reaction times on the LCD*
