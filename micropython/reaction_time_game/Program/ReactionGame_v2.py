@@ -25,6 +25,10 @@ right_button = machine.Pin(16, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
 player2_wins = 4
 player1_wins = 0
+avg_player1_reactions = 0
+avg_player2_reactions = 0
+player1_reactions = []
+player2_reactions = []
 fastest_button = None
 running = True
 
@@ -35,21 +39,35 @@ def button_handler(pin):
         timer_reaction = utime.ticks_diff(utime.ticks_ms(), timer_start)
         if fastest_button is left_button:
             print("Player 1 won the round! \n")
-            global player1_wins
+            global player1_wins, avg_player1_reactions
             player1_wins += 1
-            if timer_reaction < 500:
+            # Add the timer reaction to the array
+            player1_reactions.append(timer_reaction)
+            # Calculate the average of the last 5 reaction times
+            if len(player1_reactions) > 5:
+                avg_player1_reactions = sum(player1_reactions[-5:])/len(player1_reactions[-5:])
+            else:
+                avg_player1_reactions = sum(player1_reactions)/len(player1_reactions)
+            if timer_reaction < avg_player1_reactions - 100:
                 print("Wow! Quick reaction time Player 1!: " + str(timer_reaction) + " milliseconds!")
-            elif timer_reaction >= 500 and timer_reaction < 700:
+            elif timer_reaction >= avg_player1_reactions - 100 and timer_reaction < avg_player1_reactions + 100:
                 print("Good reaction time Player 1!: " + str(timer_reaction) + " milliseconds!")
             else:
                 print("Slow reaction time Player 1!: " + str(timer_reaction) + " milliseconds!")
         elif fastest_button is right_button:
             print("Player 2 won the round! \n")
-            global player2_wins
+            global player2_wins, avg_player2_reactions
             player2_wins += 1
-            if timer_reaction < 500:
+            # Add the timer reaction to the array
+            player2_reactions.append(timer_reaction)
+            # Calculate the average of the last 5 reaction times
+            if len(player2_reactions) > 5:
+                avg_player2_reactions = sum(player2_reactions[-5:])/len(player2_reactions[-5:])
+            else:
+                avg_player2_reactions = sum(player2_reactions)/len(player2_reactions)
+            if timer_reaction < avg_player2_reactions - 100:
                 print("Wow! Quick reaction time Player 2!: " + str(timer_reaction) + " milliseconds!")
-            elif timer_reaction >= 500 and timer_reaction < 700:
+            elif timer_reaction >= avg_player2_reactions - 100 and timer_reaction < avg_player2_reactions + 100:
                 print("Good reaction time Player 2!: " + str(timer_reaction) + " milliseconds!")
             else:
                 print("Slow reaction time Player 2!: " + str(timer_reaction) + " milliseconds!")
@@ -76,8 +94,10 @@ while running:
         lcd.setCursor(0, 1)
         lcd.printout("P2: " + str(player2_wins) + "    P1: " + str(player1_wins))
         led.value(1)
-        utime.sleep(urandom.uniform(2, 13))
-        lcd.clear()       
+        utime.sleep(urandom.uniform(2, 5))
+        lcd.clear()
+        print("Average reaction time for Player 1 is: " + str(avg_player1_reactions))
+        print("Average reaction time for Player 2 is: " + str(avg_player2_reactions))
     if player2_wins == 5 or player1_wins == 5:
         if player2_wins == 5:
             lcd.clear()
@@ -91,9 +111,9 @@ while running:
             utime.sleep(7)
             lcd.clear()
             lcd.setCursor(0, 0)
-            lcd.printout("Avg. react. times")
+            lcd.printout("Avg. reaction time:")
             lcd.setCursor(0, 1)
-            lcd.printout("P1:" + "P2:")
+            lcd.printout("P2" + str(avg_player2_reactions) + " P1" + str(avg_player2_reactions))
             utime.sleep(3)
         else:
             lcd.clear()
@@ -109,6 +129,5 @@ while running:
             lcd.setCursor(0, 0)
             lcd.printout("Avg. reaction time:")
             lcd.setCursor(0, 1)
-            lcd.printout("P2:" + str(player2_wins) + "P1:")
-            lcd.printout("")
-            utime.sleep(3)
+            lcd.printout("P2" + str(avg_player2_reactions) + " P1" + str(avg_player2_reactions))
+            utime.sleep(15)
