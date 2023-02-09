@@ -23,9 +23,10 @@ led = machine.Pin(15, machine.Pin.OUT)
 left_button = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
 right_button = machine.Pin(16, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
-player2_wins = 0
+player2_wins = 4
 player1_wins = 0
 fastest_button = None
+running = True
 
 def button_handler(pin):
     global fastest_button
@@ -53,41 +54,61 @@ def button_handler(pin):
             else:
                 print("Slow reaction time Player 2!: " + str(timer_reaction) + " milliseconds!")
 
-while player2_wins < 5 and player1_wins < 5:
-    fastest_button = None
-    timer_start = utime.ticks_ms()
-    left_button.irq(trigger=machine.Pin.IRQ_RISING, handler=button_handler)
-    right_button.irq(trigger=machine.Pin.IRQ_RISING, handler=button_handler)
-    led.value(0)
-    lcd.clear()
-    lcd.setCursor(0, 0)
-    lcd.printout("Fastest wins!")
-    lcd.setCursor(0, 1)
-    lcd.printout("P2: " + str(player2_wins) + "    P1: " + str(player1_wins))
-    print("GO!")
-    utime.sleep(5)
-    print("Player 2: " + str(player2_wins) + " ---" + " Player 1: " +str(player1_wins) + "\n")
-    print("Ready, set..")
-    lcd.clear()
-    lcd.setCursor(0, 0)
-    lcd.printout("Ready, set...")
-    lcd.setCursor(0, 1)
-    lcd.printout("P2: " + str(player2_wins) + "    P1: " + str(player1_wins))
-    led.value(1)
-    utime.sleep(urandom.uniform(2, 13))
-    lcd.clear()
-
-if player2_wins == 5:
-    lcd.clear()
-    lcd.setCursor(0, 0)
-    lcd.printout("Player 2 Victory!")
-    lcd.setCursor(0, 1)
-    lcd.printout("P2: " + str(player2_wins) + "    P1: " + str(player1_wins))
-    print("Player 2 wins the overall game with 5 wins!")
-else:
-    lcd.clear()
-    lcd.setCursor(0, 0)
-    lcd.printout("P1 Victory!")
-    lcd.setCursor(0, 1)
-    lcd.printout("P2: " + str(player2_wins) + "    P1: " + str(player1_wins))
-    print("Player 1 wins the overall game with 5 wins!")
+while running:
+    if player2_wins < 5 and player1_wins < 5:
+        fastest_button = None
+        timer_start = utime.ticks_ms()
+        left_button.irq(trigger=machine.Pin.IRQ_RISING, handler=button_handler)
+        right_button.irq(trigger=machine.Pin.IRQ_RISING, handler=button_handler)
+        led.value(0)
+        lcd.clear()
+        lcd.setCursor(0, 0)
+        lcd.printout("Fastest wins!")
+        lcd.setCursor(0, 1)
+        lcd.printout("P2: " + str(player2_wins) + "    P1: " + str(player1_wins))
+        print("GO!")
+        utime.sleep(5)
+        print("Player 2: " + str(player2_wins) + " ---" + " Player 1: " +str(player1_wins) + "\n")
+        print("Ready, set..")
+        lcd.clear()
+        lcd.setCursor(0, 0)
+        lcd.printout("Ready, set...")
+        lcd.setCursor(0, 1)
+        lcd.printout("P2: " + str(player2_wins) + "    P1: " + str(player1_wins))
+        led.value(1)
+        utime.sleep(urandom.uniform(2, 13))
+        lcd.clear()       
+    if player2_wins == 5 or player1_wins == 5:
+        if player2_wins == 5:
+            lcd.clear()
+            lcd.setCursor(0, 0)
+            lcd.printout("Player 2 Victory!")
+            lcd.setCursor(0, 1)
+            lcd.printout("P2: " + str(player2_wins) + "    P1: " + str(player1_wins))
+            print("Player 2 wins the overall game with 5 wins!")
+            player2_wins = 0
+            player1_wins = 0
+            utime.sleep(7)
+            lcd.clear()
+            lcd.setCursor(0, 0)
+            lcd.printout("Avg. react. times")
+            lcd.setCursor(0, 1)
+            lcd.printout("P1:" + "P2:")
+            utime.sleep(3)
+        else:
+            lcd.clear()
+            lcd.setCursor(0, 0)
+            lcd.printout("P1 Victory!")
+            lcd.setCursor(0, 1)
+            lcd.printout("P2: " + str(player2_wins) + "    P1: " + str(player1_wins))
+            print("Player 1 wins the overall game with 5 wins!")
+            player2_wins = 0
+            player1_wins = 0
+            utime.sleep(7)
+            lcd.clear()
+            lcd.setCursor(0, 0)
+            lcd.printout("Avg. reaction time:")
+            lcd.setCursor(0, 1)
+            lcd.printout("P2:" + str(player2_wins) + "P1:")
+            lcd.printout("")
+            utime.sleep(3)
