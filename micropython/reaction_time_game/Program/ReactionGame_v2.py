@@ -113,7 +113,7 @@ while running:
             lcd.setCursor(0, 0)
             lcd.printout("Avg. reaction time:")
             lcd.setCursor(0, 1)
-            lcd.printout("P2" + str(avg_player2_reactions) + " P1" + str(avg_player2_reactions))
+            lcd.printout("P2:" + str(avg_player2_reactions) + " P1:" + str(avg_player1_reactions))
             utime.sleep(3)
         else:
             lcd.clear()
@@ -129,5 +129,5 @@ while running:
             lcd.setCursor(0, 0)
             lcd.printout("Avg. reaction time:")
             lcd.setCursor(0, 1)
-            lcd.printout("P2" + str(avg_player2_reactions) + " P1" + str(avg_player2_reactions))
+            lcd.printout("P2:" + str(avg_player2_reactions) + " P1:" + str(avg_player1_reactions))
             utime.sleep(15)
