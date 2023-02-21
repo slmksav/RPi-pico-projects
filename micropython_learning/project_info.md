@@ -1,5 +1,5 @@
 # RPi-pico-projects
-Projects for the Pico-series microcontrollers using MicroPython and C/C++ SDK
+Projects for the Pico-series microcontrollers using MicroPython. Meant to be more than just tutorial copies, trying to apply my own sensors and functionalities, et cetera.
 
 # Reaction Game
 
