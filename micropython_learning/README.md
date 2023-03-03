@@ -1,5 +1,7 @@
 # RPi-pico-projects
 Projects using MicroPython. Meant to be more than just tutorial copies, trying to apply my own sensors and functionalities, et cetera.
+- Reaction Game
+- Controllable alarm
 
 # Reaction Game
 
