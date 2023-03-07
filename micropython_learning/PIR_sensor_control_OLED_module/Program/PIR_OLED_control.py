@@ -1,7 +1,9 @@
-from machine import Pin,SPI
-from oled import OLED_1inch3
+import machine
 import time
 import framebuf
+
+
+# minimal library code for the OLED module
 
 class OLED_1inch3(framebuf.FrameBuffer):
     def __init__(self): 
@@ -46,7 +48,7 @@ class OLED_1inch3(framebuf.FrameBuffer):
         time.sleep(0.01)
         self.rst(1)
         
-        self.write_cmd(0xAE)#turn off OLED display
+        self.write_cmd(0xAE) #turn off OLED display
 
         self.write_cmd(0x00)   #set lower column address
         self.write_cmd(0x10)   #set higher column address 
@@ -90,6 +92,8 @@ class OLED_1inch3(framebuf.FrameBuffer):
             self.write_cmd(0x10 + (self.column >> 4))
             for num in range(0,16):
                 self.write_data(self.buffer[page*16+num])
+
+# end of library code
                 
 DC = 8
 RST = 12
@@ -223,7 +227,7 @@ if __name__ == '__main__':
                     OLED.text("/ / / / / /", 18, 51, 1)
                     OLED.text("PIR Inactive", 2, 4, 1)
                     OLED.text("Settings:", 1, 23, 1)
-                    OLED.text("DEBUG: " + str(data), 2, 36, 1)
+                    OLED.text("TIMER: " + str(data), 2, 36, 1)
                     OLED.show()
                     print(debug)
                     if key1.value() == 0 and debug == True:
@@ -234,7 +238,7 @@ if __name__ == '__main__':
                         OLED.text("/ / / / / /", 18, 51, 1)
                         OLED.text("PIR Inactive", 2, 4, 1)
                         OLED.text("Settings:", 1, 23, 1)
-                        OLED.text("DEBUG: OFF <", 2, 36, 1)
+                        OLED.text("TIMER: OFF <", 2, 36, 1)
                         data = 'OFF <'
                         debug = False
                         OLED.show()
@@ -246,7 +250,7 @@ if __name__ == '__main__':
                         OLED.text("/ / / / / /", 18, 51, 1)
                         OLED.text("PIR Inactive", 2, 4, 1)
                         OLED.text("Settings:", 1, 23, 1)
-                        OLED.text("DEBUG: ON <", 2, 36, 1)
+                        OLED.text("TIMER: ON <", 2, 36, 1)
                         data = 'ON <'
                         debug = True
                         OLED.show()
