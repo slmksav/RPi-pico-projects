@@ -103,8 +103,10 @@ CS = 9
                 
 OLED = OLED_1inch3()
 intro = True
+alarm = False
 debug = False
 led_onboard = machine.Pin(25, machine.Pin.OUT)
+buzzer_pin = machine.Pin(18, machine.Pin.OUT)
 key0 = Pin(15, Pin.IN, Pin.PULL_UP)
 key1 = Pin(17, Pin.IN, Pin.PULL_UP)
 data = 'OFF'
@@ -119,9 +121,17 @@ def pir_handler(pin):
         interrupt_triggered = True
         if interrupt_triggered == True:
             print("ALARM")
+            alarm = True
             led_onboard.value(1)
+            while alarm:
+                buzzer_pin.off()
+                buzzer_pin.off()
+                time.sleep(0.2)
+                buzzer_pin.on()
+                time.sleep(3)
         else:
             led_onboard.value(0)
+            buzzer_pin.off()
     
 sensor_pir.irq(trigger=machine.Pin.IRQ_RISING, handler=pir_handler)
 
@@ -230,6 +240,7 @@ if __name__ == '__main__':
                     OLED.text("TIMER: " + str(data), 2, 36, 1)
                     OLED.show()
                     print(debug)
+                    alarm = False
                     if key1.value() == 0 and debug == True:
                         OLED.fill_rect(0,0,128, 90, 0)
                         OLED.text("q q q q q q", 16, 50, 1)
