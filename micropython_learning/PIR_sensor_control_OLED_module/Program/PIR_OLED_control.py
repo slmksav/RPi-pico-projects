@@ -1,4 +1,4 @@
-import machine
+from machine import Pin,SPI
 import time
 import framebuf
 
@@ -117,21 +117,25 @@ sensor_pir = machine.Pin(28, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
 def pir_handler(pin):
     if sensor_on == True:
-        global interrupt_triggered
+        global interrupt_triggered, debug, alarm
         interrupt_triggered = True
-        if interrupt_triggered == True:
-            print("ALARM")
-            alarm = True
-            led_onboard.value(1)
-            while alarm:
-                buzzer_pin.off()
-                buzzer_pin.off()
-                time.sleep(0.2)
+        alarm = True
+        if alarm:
+            if interrupt_triggered and debug == False:
+                print("ALARM - 8S")
+                led_onboard.value(1)
                 buzzer_pin.on()
-                time.sleep(3)
-        else:
-            led_onboard.value(0)
-            buzzer_pin.off()
+                time.sleep(8)
+                buzzer_pin.off()
+            elif interrupt_triggered and debug:
+                print("ALARM -- DEBUG")
+                led_onboard.value(1)
+                buzzer_pin.on()
+                time.sleep(0.6)
+                buzzer_pin.off()
+            else:
+                led_onboard.value(0)
+                buzzer_pin.off()
     
 sensor_pir.irq(trigger=machine.Pin.IRQ_RISING, handler=pir_handler)
 
@@ -203,7 +207,6 @@ if __name__ == '__main__':
             OLED.text("Run <", 2, 23, 1)
             OLED.text("Settings", 2, 36, 1)
             OLED.show()
-            sensor_on = True
             if key0.value() == 0:
                 OLED.fill_rect(0,0,128, 90, 0)
                 OLED.text("q q q q q q", 16, 50, 1)
@@ -213,6 +216,8 @@ if __name__ == '__main__':
                 OLED.text("PIR Active", 2, 4, 1)
                 OLED.text("Running... <", 2, 23, 1)
                 OLED.text("Settings", 2, 36, 1)
+                time.sleep(10)
+                sensor_on = True
                 OLED.show()
         else:
             OLED.show()
@@ -237,7 +242,7 @@ if __name__ == '__main__':
                     OLED.text("/ / / / / /", 18, 51, 1)
                     OLED.text("PIR Inactive", 2, 4, 1)
                     OLED.text("Settings:", 1, 23, 1)
-                    OLED.text("TIMER: " + str(data), 2, 36, 1)
+                    OLED.text("DEBUG: " + str(data), 2, 36, 1)
                     OLED.show()
                     print(debug)
                     alarm = False
@@ -249,7 +254,8 @@ if __name__ == '__main__':
                         OLED.text("/ / / / / /", 18, 51, 1)
                         OLED.text("PIR Inactive", 2, 4, 1)
                         OLED.text("Settings:", 1, 23, 1)
-                        OLED.text("TIMER: OFF <", 2, 36, 1)
+                        OLED.text("DEBUG: OFF <", 2, 36, 1)
+                        print("Debug off, buzzer uptime limited to 8s")
                         data = 'OFF <'
                         debug = False
                         OLED.show()
@@ -261,9 +267,11 @@ if __name__ == '__main__':
                         OLED.text("/ / / / / /", 18, 51, 1)
                         OLED.text("PIR Inactive", 2, 4, 1)
                         OLED.text("Settings:", 1, 23, 1)
-                        OLED.text("TIMER: ON <", 2, 36, 1)
+                        OLED.text("DEBUG: ON <", 2, 36, 1)
+                        print("Debug on, buzzer uptime limited to 6ms")
                         data = 'ON <'
                         debug = True
                         OLED.show()
                     if key0.value() == 0:
                         break
+                    
