@@ -1,6 +1,6 @@
 # RPi-pico-projects
-Projects using MicroPython. Meant to be more than just tutorial copies, trying to apply my own sensors and functionalities, et cetera.
-- Reaction Game
+Projects using MicroPython. Meant to be more than just tutorial copies, trying to apply my own sensors and functionalities et cetera. 
+- Reaction time game with real-time results and calculations displayed on LCD
 - Physically manageable alarm through an OLED screen that sends information remotely over MQTT protocol
 
 # Reaction Game
