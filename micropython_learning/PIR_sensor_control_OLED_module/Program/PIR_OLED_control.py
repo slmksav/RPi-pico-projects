@@ -1,6 +1,7 @@
 from machine import Pin,SPI
 import time
 import framebuf
+from umqtt.simple import MQTTClient
 
 
 # minimal library code for the OLED module
@@ -94,26 +95,45 @@ class OLED_1inch3(framebuf.FrameBuffer):
                 self.write_data(self.buffer[page*16+num])
 
 # end of library code
-                
+
+# OLED pins
 DC = 8
 RST = 12
 MOSI = 11
 SCK = 10
 CS = 9
-                
+
+# pin definitions
 OLED = OLED_1inch3()
-intro = True
-alarm = False
-debug = False
+sensor_pir = machine.Pin(28, machine.Pin.IN, machine.Pin.PULL_DOWN)
 led_onboard = machine.Pin(25, machine.Pin.OUT)
 buzzer_pin = machine.Pin(18, machine.Pin.OUT)
 key0 = Pin(15, Pin.IN, Pin.PULL_UP)
 key1 = Pin(17, Pin.IN, Pin.PULL_UP)
+
+# wifi definitions
+WIFI_SSID = 'DNA-XXX-XXX-XXX'
+WIFI_PASSWORD = 'XXXX****'
+MQTT_BROKER = '----------'
+MQTT_PORT = 1883
+MQTT_USER = 'ssaul'
+MQTT_PASSWORD = 'XXXX****'
+MQTT_TOPIC = b'PIR Sensor Active Alarm'
+
+# making the connection to the wifi network
+wifi = network.WLAN(network.STA_IF)
+wifi.active(True)
+wifi.connect(WIFI_SSID, WIFI_PASSWORD)
+
+
+# global variables to control the program and communicate between interrupts and events
 data = 'OFF'
+intro = True
+alarm = False
+debug = False
 sensor_on = False
 interrupt_triggered = False 
 led_onboard.value(0)
-sensor_pir = machine.Pin(28, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
 def pir_handler(pin):
     if sensor_on == True:
@@ -122,14 +142,16 @@ def pir_handler(pin):
         alarm = True
         if alarm:
             if interrupt_triggered and debug == False:
-                print("ALARM - 8S")
+                print("ALARM - 15S")
                 led_onboard.value(1)
+                client.publish(MQTT_TOPIC, b'ALARM TRIGGERED!')
                 buzzer_pin.on()
-                time.sleep(8)
+                time.sleep(15)
                 buzzer_pin.off()
             elif interrupt_triggered and debug:
                 print("ALARM -- DEBUG")
                 led_onboard.value(1)
+                client.publish(MQTT_TOPIC, b'ALARM TEST!')
                 buzzer_pin.on()
                 time.sleep(0.6)
                 buzzer_pin.off()
@@ -140,6 +162,8 @@ def pir_handler(pin):
 sensor_pir.irq(trigger=machine.Pin.IRQ_RISING, handler=pir_handler)
 
 if __name__ == '__main__':
+    client = MQTTClient("PIR OLED", MQTT_BROKER, MQTT_PORT, MQTT_USER, MQTT_PASSWORD)
+    client.connect()
     # Dragon Baby
     OLED.text("q q q q q ", 33, 30)
     OLED.text("= = = = = ", 33, 32)
@@ -196,7 +220,11 @@ if __name__ == '__main__':
     OLED.text("Run", 2, 23, 1)
     OLED.text("Settings", 2, 36, 1)
     OLED.show()
+    # Beginning of the program
     while(1):
+        while not wifi.isconnected():
+            time.sleep(1)
+            print('Connected to WiFi:', wifi.ifconfig())
         if key0.value() == 0:
             OLED.fill_rect(0,0,128, 90, 0)
             OLED.text("q q q q q q", 16, 50, 1)
@@ -255,7 +283,7 @@ if __name__ == '__main__':
                         OLED.text("PIR Inactive", 2, 4, 1)
                         OLED.text("Settings:", 1, 23, 1)
                         OLED.text("DEBUG: OFF <", 2, 36, 1)
-                        print("Debug off, buzzer uptime limited to 8s")
+                        print("Debug off, buzzer uptime limited to 15s")
                         data = 'OFF <'
                         debug = False
                         OLED.show()
