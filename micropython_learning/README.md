@@ -21,3 +21,8 @@ Made with the Pico and MicroPython using: LCD1602, 1 LED, 1 330Ω resistor, two 
 *victory screen on the LCD and scores of both players on display*
 ![image](https://user-images.githubusercontent.com/87731856/217895031-88c8585e-3828-490c-905d-32eff490368d.png)
 *lastly, it will begin a new game after showing the average reaction times on the LCD*
+
+# PIR alarm IoT device
+![image](https://user-images.githubusercontent.com/87731856/227073030-18f3108e-ef5e-43f5-b7a6-62d084360c2e.png)
+![image](https://user-images.githubusercontent.com/87731856/227072958-64792add-cfce-425e-8a06-38eb5afa3c89.png)
+
