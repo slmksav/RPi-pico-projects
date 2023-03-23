@@ -3,6 +3,10 @@ Projects using MicroPython. Meant to be more than just tutorial copies, trying t
 - Reaction time game with real-time results and calculations displayed on LCD
 - Physically manageable PIR alarm through an OLED screen that sends information remotely over MQTT protocol
 
+# PIR alarm IoT device
+![image](https://user-images.githubusercontent.com/87731856/227073030-18f3108e-ef5e-43f5-b7a6-62d084360c2e.png)
+![image](https://user-images.githubusercontent.com/87731856/227072958-64792add-cfce-425e-8a06-38eb5afa3c89.png)
+*pre-casing photos*
 # Reaction Game
 
 Made with the Pico and MicroPython using: LCD1602, 1 LED, 1 330Ω resistor, two capped tactile buttons. Two players compete for the best reaction time and gain one score each round. Once a player hits five scores, the game ends. In addition, the game will calculate the average reaction based on last five reactions (all reactions are stored in an array), and display it on the LCD and terminal.
@@ -21,8 +25,3 @@ Made with the Pico and MicroPython using: LCD1602, 1 LED, 1 330Ω resistor, two 
 *victory screen on the LCD and scores of both players on display*
 ![image](https://user-images.githubusercontent.com/87731856/217895031-88c8585e-3828-490c-905d-32eff490368d.png)
 *lastly, it will begin a new game after showing the average reaction times on the LCD*
-
-# PIR alarm IoT device
-![image](https://user-images.githubusercontent.com/87731856/227073030-18f3108e-ef5e-43f5-b7a6-62d084360c2e.png)
-![image](https://user-images.githubusercontent.com/87731856/227072958-64792add-cfce-425e-8a06-38eb5afa3c89.png)
-
