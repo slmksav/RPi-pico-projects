@@ -2,31 +2,51 @@
 #include "hardware/gpio.h"
 #include "hardware/irq.h"
 
-#define PIR_PIN 0
-#define LED_PIN 7
-#define BUZZER_PIN 16
-#define BUTTON_PIN 17
+typedef enum {
+    GPIO_INPUT,
+    GPIO_OUTPUT,
+} gpio_direction_t;
+
+typedef enum {
+    GPIO_PULL_NONE,
+    GPIO_PULL_UP,
+    GPIO_PULL_DOWN,
+} gpio_pull_mode_t;
+
+typedef struct {
+    uint pin_number;
+    gpio_direction_t pin_direction;
+    gpio_pull_mode_t pin_pull_mode;
+} PinConfig;
+
+const uint PIR_PIN = 0;
+const uint LED_PIN = 7;
+const uint BUZZER_PIN = 16;
+const uint BUTTON_PIN = 17;
+
+const PinConfig pin_config[] = {
+    {PIR_PIN, GPIO_INPUT, GPIO_PULL_NONE},    // PIR pin
+    {LED_PIN, GPIO_OUTPUT, GPIO_PULL_NONE},   // LED pin
+    {BUZZER_PIN, GPIO_OUTPUT, GPIO_PULL_NONE},// Buzzer pin
+    {BUTTON_PIN, GPIO_INPUT, GPIO_PULL_UP},   // Button pin
+};
 
 volatile bool pir_enabled = true;
 
-void handle_button_irq() {
+void handle_button_irq(uint gpio, uint32_t events) {
     pir_enabled = !pir_enabled;
 }
 
 int main() {
     stdio_init_all();
 
-    gpio_init(PIR_PIN);
-    gpio_set_dir(PIR_PIN, GPIO_IN);
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
-    gpio_init(BUZZER_PIN);
-    gpio_set_dir(BUZZER_PIN, GPIO_OUT);
+    for (int i = 0; i < sizeof(pin_config) / sizeof(pin_config[0]); i++) {
+        gpio_init(pin_config[i].pin_number);
+        gpio_set_dir(pin_config[i].pin_number, pin_config[i].pin_direction);
+        gpio_set_pulls(pin_config[i].pin_number, pin_config[i].pin_pull_mode, pin_config[i].pin_pull_mode);
+    }
 
-    gpio_init(BUTTON_PIN);
-    gpio_set_dir(BUTTON_PIN, GPIO_IN);
-    gpio_pull_up(BUTTON_PIN);
-    gpio_irq_callback(BUTTON_PIN, GPIO_IRQ_EDGE_RISE, true, &handle_button_irq);
+    gpio_set_irq_enabled_with_callback(BUTTON_PIN, GPIO_IRQ_EDGE_RISE, true, &handle_button_irq);
 
     // wait time for the PIR sensor to stabilize after power has been turned on
     sleep_ms(2000);
