@@ -8,6 +8,7 @@ pico_sdk_init()
 
 add_executable(template
     main.c
+    header.h
 )
 
 include_directories(lib/)
