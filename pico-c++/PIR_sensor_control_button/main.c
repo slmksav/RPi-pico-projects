@@ -60,9 +60,9 @@ int main()
 
     for (int i = 0; i < sizeof(pin_config) / sizeof(pin_config[0]); i++)
     {
-        gpio_init(pin_config[i].pin_number);
-        gpio_set_dir(pin_config[i].pin_number, pin_config[i].pin_direction);
-        gpio_set_pulls(pin_config[i].pin_number, pin_config[i].pin_pull_mode, pin_config[i].pin_pull_mode);
+        gpio_init(pin_config[i].pin_number); //initializes all pins to be used as I/Os
+        gpio_set_dir(pin_config[i].pin_number, pin_config[i].pin_direction); //direction (output, input)
+        gpio_set_pulls(pin_config[i].pin_number, pin_config[i].pin_pull_mode, pin_config[i].pin_pull_mode); //pull ups and pull downs
     }
 
     gpio_set_irq_enabled_with_callback(BUTTON_PIN, GPIO_IRQ_EDGE_RISE, true, &handle_button_irq);
