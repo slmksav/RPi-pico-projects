@@ -1,7 +1,7 @@
-from AutonomousRobotics import PicoRobotrobo
+from AutonomousRobotics import PicoRobot
 from time import sleep_ms
 
-robo = KitronikPicoRobotrobo()
+robo = PicoRobot()
 startStop = False
 
 # 0 = free space, 1 = obstacle
