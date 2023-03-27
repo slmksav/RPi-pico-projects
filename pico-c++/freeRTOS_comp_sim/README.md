@@ -1,5 +1,7 @@
 # FreeRTOS computer simulation program
-using mutexes and semaphores to release threads for four tasks so it would allocate resources
+using mutexes and semaphores to release threads for 
+- four tasks so it would allocate resources
+- proof of it successfully allocating them is the equal amount of asterixes which mark one "usage"
 for them equally. The program is written in C language and it is compiled using gcc-arm compiler, not the pico compiler.
 ![image](https://user-images.githubusercontent.com/87731856/227856449-8867bdc4-8679-4f59-94b4-088f3f8214e5.png)
 *outputs from the serial monitor*
